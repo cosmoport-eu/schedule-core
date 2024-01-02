@@ -121,9 +121,11 @@ public final class EventTypePersistenceService extends PersistenceService<EventT
                         i18nPersistenceService.save(I18nDto.Short("event_type_subcategory_" + uid), conn);
                 translationPersistenceService.saveWithDefaultTranslation(eventTypeI18nSub.getId(), eventType.name(), conn);
 
+                final String color = eventTypeCategoryPersistenceService.findById(eventType.categoryId()).orElseThrow()
+                        .getColor();
                 // save the name as a new category
                 final var eventSubcategory = eventTypeCategoryPersistenceService.save(
-                        new EventTypeCategoryDto(0L, eventTypeI18nSub.getId(), eventType.categoryId()), conn);
+                        new EventTypeCategoryDto(0L, eventTypeI18nSub.getId(), eventType.categoryId(), color), conn);
 
                 eCatTypes.add(eventSubcategory);
 

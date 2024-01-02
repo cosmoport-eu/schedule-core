@@ -107,7 +107,9 @@ public class TimetablePersistenceService extends PersistenceService<EventDto> {
             params.add(date2);
         }
 
-        String sql = "SELECT * FROM TIMETABLE WHERE " +
+        final String sql = "SELECT t.*, etc.COLOR FROM TIMETABLE t " +
+                "left join EVENT_TYPE et on t.event_type_id = et.id " +
+                "left join EVENT_TYPE_CATEGORY etc on et.category_id = etc.id WHERE " +
                 (hasDate1 && hasDate2 ? "event_date BETWEEN ? AND ? " :
                         hasDate2 ? "event_date <= ? " :
                                 hasDate1 ? "event_date >= ? " : "") +
@@ -460,7 +462,7 @@ public class TimetablePersistenceService extends PersistenceService<EventDto> {
      * @throws RuntimeException In case of an exception during delete.
      * @since 0.1.0
      */
-    public boolean delete(final long id) throws RuntimeException {
+    public boolean delete(final long id) {
         return deleteByIdWithParams("DELETE FROM TIMETABLE WHERE id = ?", id) == 1;
     }
 
@@ -470,6 +472,7 @@ public class TimetablePersistenceService extends PersistenceService<EventDto> {
                 rs.getLong("id"),
                 rs.getString("event_date"),
                 rs.getLong("event_type_id"),
+                rs.getString("color"),
                 rs.getLong("event_state_id"),
                 rs.getLong("event_status_id"),
                 rs.getLong("event_destination_id"),

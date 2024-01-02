@@ -13,6 +13,7 @@ public final class EventDto extends Entity {
 
     private final String eventDate;
     private final long eventTypeId;
+    private final String eventColor;
     private final long eventStateId;
     private final long eventStatusId;
     private final long eventDestinationId;
@@ -30,6 +31,7 @@ public final class EventDto extends Entity {
     public EventDto(@JsonProperty("id") long id,
                     @JsonProperty("event_date") String eventDate,
                     @JsonProperty("event_type_id") long eventTypeId,
+                    @JsonProperty("event_color") String eventColor,
                     @JsonProperty("event_state_id") long eventStateId,
                     @JsonProperty("event_status_id") long eventStatusId,
                     @JsonProperty("event_destination_id") long eventDestinationId,
@@ -42,6 +44,7 @@ public final class EventDto extends Entity {
                     @JsonProperty("people_limit") long peopleLimit,
                     @JsonProperty("contestants") long contestants,
                     @JsonProperty("date_added") String dateAdded) {
+        this.eventColor = eventColor;
         this.id = id;
         this.eventDate = eventDate;
         this.eventTypeId = eventTypeId;
@@ -61,6 +64,7 @@ public final class EventDto extends Entity {
 
     public EventDto(long id) {
         this.id = id;
+        this.eventColor = null;
         eventStateId = 0;
         eventDate = null;
         eventTypeId = 0;
@@ -131,6 +135,10 @@ public final class EventDto extends Entity {
 
     public String getDateAdded() {
         return dateAdded;
+    }
+
+    public String getEventColor() {
+        return eventColor;
     }
 
     @Override

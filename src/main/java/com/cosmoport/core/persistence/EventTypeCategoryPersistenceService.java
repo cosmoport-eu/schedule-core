@@ -35,7 +35,8 @@ public class EventTypeCategoryPersistenceService extends PersistenceService<Even
         return new EventTypeCategoryDto(
                 rs.getLong("id"),
                 rs.getLong("i18n_event_type_category_name"),
-                rs.getLong("parent"));
+                rs.getLong("parent"),
+                rs.getString("color"));
     }
 
     public Optional<EventTypeCategoryDto> findById(long id) {
@@ -73,7 +74,7 @@ public class EventTypeCategoryPersistenceService extends PersistenceService<Even
             translationPersistenceService.saveWithDefaultTranslation(eventTypeI18nSub.getId(), cat.name(), conn);
 
             // save the name as a new category
-            newEventTypeCategory = save(new EventTypeCategoryDto(0L, eventTypeI18nSub.getId(), 0), conn);
+            newEventTypeCategory = save(new EventTypeCategoryDto(0L, eventTypeI18nSub.getId(), 0, cat.color()), conn);
 
             conn.commit();
         } catch (SQLException sqlexception) {
@@ -97,7 +98,7 @@ public class EventTypeCategoryPersistenceService extends PersistenceService<Even
             conn = extConn != null ? extConn : getConnection();
 
             statement = conn.prepareStatement(
-                    "INSERT INTO EVENT_TYPE_CATEGORY (i18n_event_type_category_name, parent) VALUES (?, ?)",
+                    "INSERT INTO EVENT_TYPE_CATEGORY (i18n_event_type_category_name, parent, color) VALUES (?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
             statement.setLong(1, etc.getI18nEventTypeCategoryName());
             if (etc.getParent() > 0) {
@@ -105,6 +106,7 @@ public class EventTypeCategoryPersistenceService extends PersistenceService<Even
             } else {
                 statement.setNull(2, Types.BIGINT);
             }
+            statement.setString(3, etc.getColor() == null ? "#41A6f3" : etc.getColor());
 
             if (statement.executeUpdate() < 0) {
                 throw new Exception();

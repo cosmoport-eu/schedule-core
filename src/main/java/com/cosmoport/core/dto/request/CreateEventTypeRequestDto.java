@@ -5,9 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public record CreateEventTypeRequestDto(long categoryId, String name, String description,
-                                        List<CreateEventSubTypeRequestDto> subtypes, int defaultDuration,
-                                        int defaultRepeatInterval, double defaultCost) {
+public record CreateEventTypeRequestDto(long categoryId,
+                                        String name,
+                                        String description,
+                                        List<CreateEventSubTypeRequestDto> subtypes,
+                                        int defaultDuration,
+                                        int defaultRepeatInterval,
+                                        double defaultCost) {
     @JsonCreator
     public CreateEventTypeRequestDto(@JsonProperty("category_id") long categoryId,
                                      @JsonProperty("name") String name,

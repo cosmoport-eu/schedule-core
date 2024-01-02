@@ -43,7 +43,7 @@ class EventTypeCategoryPersistenceServiceTest extends PersistenceTest {
     @Test
     @DisplayName("Should be able to create new event type categories")
     void create() {
-        final var rq = new CreateEventTypeCategoryRequestDto("test");
+        final var rq = new CreateEventTypeCategoryRequestDto("test", "#000000");
 
         final var result = service.create(rq);
         final var trs = translationPersistenceService.findAllByI18n(result.getI18nEventTypeCategoryName());
