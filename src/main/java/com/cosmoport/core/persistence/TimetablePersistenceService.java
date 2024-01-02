@@ -26,7 +26,7 @@ import java.util.Optional;
  */
 public class TimetablePersistenceService extends PersistenceService<EventDto> {
     private final SettingsPersistenceService settingsPersistenceService;
-    private static final String defaultOrder = " ORDER BY event_date, start_time";
+    private static final String DEFAULT_ORDER = " ORDER BY event_date, start_time";
 
     @Inject
     public TimetablePersistenceService(
@@ -39,86 +39,6 @@ public class TimetablePersistenceService extends PersistenceService<EventDto> {
     }
 
     /**
-     * Fetches all events from the table without any conditions.
-     *
-     * @return A collection of {@code TimetableDto} objects or an empty list.
-     * @throws RuntimeException In case of any exception during fetch procedure.
-     * @since 0.1.0
-     */
-    public List<EventDto> getAll() throws RuntimeException {
-        return getAll("SELECT * FROM TIMETABLE" + defaultOrder);
-    }
-
-    /**
-     * Fetches all events from the table.
-     * Uses hardcoded params, oh well.
-     *
-     * @param date   null or the date string to filter with formatted in yyyy-mm-dd supposedly.
-     * @param gateId null or the id number to filter by a gate id.
-     * @return A collection of {@code TimetableDto} objects or an empty list.
-     * @throws RuntimeException In case of any exception during fetch procedure.
-     * @since 0.1.0
-     */
-    public List<EventDto> getAllWithFilter(final String date, final Long gateId) {
-        getLogger().debug("date={}, gateId={}", date, gateId);
-
-        final boolean hasDate = date != null && !date.isEmpty();
-        final boolean hasGate = gateId != null && gateId != 0;
-        final boolean hasParams = hasDate || hasGate;
-
-        final List<Object> params = new ArrayList<>();
-        if (hasDate) {
-            params.add(date);
-        }
-        if (hasGate) {
-            params.add(gateId);
-        }
-
-        final StringBuilder sql = new StringBuilder("SELECT * FROM TIMETABLE");
-        if (hasParams) {
-            sql.append(" WHERE ");
-            sql.append(hasDate && hasGate ? "event_date = ? AND gate_id = ?" :
-                    hasDate ? "event_date = ?" : "gate_id = ?");
-        }
-        sql.append(defaultOrder);
-        getLogger().debug("sql={}", sql);
-
-        return getAllByParams(sql.toString(), params.toArray());
-    }
-
-    /**
-     * Fetches all the events from the database by a date period.
-     *
-     * @param date  null or the start date in yyyy-mm-dd format.
-     * @param date2 null or the end date in yyyy-mm-dd format.
-     * @return A collection of {@code TimetableDto} objects or an empty list.
-     * @throws RuntimeException In case of any exception during fetch procedure.
-     * @since 0.1.3
-     */
-    public List<EventDto> getAllFromDates(final String date, final String date2) {
-        final boolean hasDate1 = date != null && !date.isEmpty();
-        final boolean hasDate2 = date2 != null && !date2.isEmpty();
-
-        final List<Object> params = new ArrayList<>();
-        if (hasDate1) {
-            params.add(date);
-        }
-        if (hasDate2) {
-            params.add(date2);
-        }
-
-        final String sql = "SELECT t.*, etc.COLOR FROM TIMETABLE t " +
-                "left join EVENT_TYPE et on t.event_type_id = et.id " +
-                "left join EVENT_TYPE_CATEGORY etc on et.category_id = etc.id WHERE " +
-                (hasDate1 && hasDate2 ? "event_date BETWEEN ? AND ? " :
-                        hasDate2 ? "event_date <= ? " :
-                                hasDate1 ? "event_date >= ? " : "") +
-                defaultOrder;
-
-        return getAllByParams(sql, params.toArray());
-    }
-
-    /**
      * Fetches all events from the table with simple page * count params.
      *
      * @return A collection of {@code TimetableDto} objects or an empty list.
@@ -127,7 +47,7 @@ public class TimetablePersistenceService extends PersistenceService<EventDto> {
      */
     private List<EventDto> getAllPage(final int page, final int count, final String date) throws RuntimeException {
         //noinspection UnnecessaryBoxing
-        return getAllByParams("SELECT * FROM TIMETABLE WHERE event_date = ? " + defaultOrder + " LIMIT ?, ?",
+        return getAllByParams("SELECT * FROM TIMETABLE WHERE event_date = ? " + DEFAULT_ORDER + " LIMIT ?, ?",
                 date, Integer.valueOf((page - 1) * count), Integer.valueOf(count));
     }
 
@@ -147,7 +67,7 @@ public class TimetablePersistenceService extends PersistenceService<EventDto> {
      * @throws RuntimeException In case of any exception during the fetch procedure.
      * @since 0.1.2
      */
-    public List<EventDto> getCustomByIdForGate(final long id) throws RuntimeException {
+    public List<EventDto> getCustomByIdForGate(final long id) {
         List<EventDto> result = new ArrayList<>();
 
         // Get the main event
@@ -159,7 +79,7 @@ public class TimetablePersistenceService extends PersistenceService<EventDto> {
             final List<EventDto> nextEvent = getAllByParams(
                     "SELECT * FROM TIMETABLE WHERE event_date = ? AND (gate_id = ? OR gate2_id = ?) AND start_time > ? " +
                             "AND event_status_id <> ? AND id <> ? " +
-                            defaultOrder + " LIMIT 1",
+                            DEFAULT_ORDER + " LIMIT 1",
                     main.getEventDate(),
                     Long.valueOf(main.getGateId()),
                     Long.valueOf(main.getGate2Id()),
@@ -472,7 +392,6 @@ public class TimetablePersistenceService extends PersistenceService<EventDto> {
                 rs.getLong("id"),
                 rs.getString("event_date"),
                 rs.getLong("event_type_id"),
-                rs.getString("color"),
                 rs.getLong("event_state_id"),
                 rs.getLong("event_status_id"),
                 rs.getLong("event_destination_id"),

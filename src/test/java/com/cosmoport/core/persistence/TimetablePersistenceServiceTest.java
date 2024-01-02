@@ -37,26 +37,9 @@ final class TimetablePersistenceServiceTest extends PersistenceTest {
         }
 
         @Test
-        @DisplayName("Should be able to execute getAll()")
-        void getAll() {
-            assertEquals(total, service.getAll().size());
-        }
-
-        @Test
         @DisplayName("Should be able to execute getAll() with paging")
         void getAllPage() {
             assertEquals(0, service.getAllPage(1, 5).size());
-        }
-
-        @Test
-        @DisplayName("Should be able execute getAllWithFilter()")
-        void getAllWithFilter() {
-            assertAll("events",
-                    () -> assertEquals(total, service.getAllWithFilter(null, null).size()),
-                    () -> assertEquals(total, service.getAllWithFilter("2017-02-05", null).size()),
-                    () -> assertEquals(total, service.getAllWithFilter(null, 1L).size()),
-                    () -> assertEquals(0, service.getAllWithFilter("2015-01-01", 1L).size())
-            );
         }
 
         @Test
