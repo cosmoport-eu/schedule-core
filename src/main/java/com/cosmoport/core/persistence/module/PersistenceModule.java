@@ -13,6 +13,7 @@ public final class PersistenceModule extends AbstractModule {
         bind(DataSource.class).toProvider(DatasourceServiceProvider.class).in(Scopes.SINGLETON);
 
         bind(TimetablePersistenceService.class);
+        bind(TimeTableReadOnlyService.class);
         bind(EventTypeCategoryPersistenceService.class);
         bind(EventTypePersistenceService.class);
         bind(EventStatusPersistenceService.class);

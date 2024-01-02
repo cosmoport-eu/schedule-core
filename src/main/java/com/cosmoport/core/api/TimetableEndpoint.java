@@ -1,12 +1,14 @@
 package com.cosmoport.core.api;
 
 import com.cosmoport.core.dto.EventDto;
+import com.cosmoport.core.dto.EventDtoWithColor;
 import com.cosmoport.core.dto.ResultDto;
 import com.cosmoport.core.dto.TimeSuggestionDto;
 import com.cosmoport.core.dto.request.TicketsUpdateRequestDto;
 import com.cosmoport.core.event.message.ReloadMessage;
 import com.cosmoport.core.event.message.SyncTimetablesMessage;
 import com.cosmoport.core.persistence.SettingsPersistenceService;
+import com.cosmoport.core.persistence.TimeTableReadOnlyService;
 import com.cosmoport.core.persistence.TimetablePersistenceService;
 import com.cosmoport.core.persistence.exception.ValidationException;
 import com.cosmoport.core.service.SuggestionService;
@@ -29,16 +31,19 @@ import java.util.Objects;
 @GZIP
 public final class TimetableEndpoint {
     private final TimetablePersistenceService service;
+    private final TimeTableReadOnlyService roService;
     private final SettingsPersistenceService settings;
     private final SuggestionService suggestionService;
     private final EventBus eventBus;
 
     @Inject
     public TimetableEndpoint(TimetablePersistenceService service,
+                             TimeTableReadOnlyService roService,
                              SettingsPersistenceService settings,
                              SuggestionService suggestionService,
                              EventBus eventBus) {
         this.service = service;
+        this.roService = roService;
         this.settings = settings;
         this.suggestionService = suggestionService;
         this.eventBus = eventBus;
@@ -48,11 +53,11 @@ public final class TimetableEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/")
-    public List<EventDto> get(@QueryParam("date") String date, @QueryParam("date2") String date2,
-                              @QueryParam("gate") long gateId) {
+    public List<EventDtoWithColor> get(@QueryParam("date") String date, @QueryParam("date2") String date2,
+                                       @QueryParam("gate") long gateId) {
         return date2 != null && (!Objects.equals(date2, "")) ?
-                service.getAllFromDates(date, date2) :
-                service.getAllWithFilter(date, gateId);
+                roService.getAllFromDates(date, date2) :
+                roService.getAllWithFilter(date, gateId);
     }
 
     @GET

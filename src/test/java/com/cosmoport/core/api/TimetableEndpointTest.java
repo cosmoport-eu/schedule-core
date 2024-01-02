@@ -1,8 +1,9 @@
 package com.cosmoport.core.api;
 
-import com.cosmoport.core.dto.EventDto;
+import com.cosmoport.core.dto.EventDtoWithColor;
 import com.cosmoport.core.persistence.PersistenceTest;
 import com.cosmoport.core.persistence.SettingsPersistenceService;
+import com.cosmoport.core.persistence.TimeTableReadOnlyService;
 import com.cosmoport.core.persistence.TimetablePersistenceService;
 import com.cosmoport.core.service.SuggestionService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -32,12 +33,14 @@ class TimetableEndpointTest extends PersistenceTest {
                 new SettingsPersistenceService(getLogger(), getDataSourceProvider());
         TimetablePersistenceService service = new TimetablePersistenceService(
                 getLogger(), getDataSourceProvider(), settings);
+        TimeTableReadOnlyService roService = new TimeTableReadOnlyService(
+                getLogger(), getDataSourceProvider());
         final SuggestionService suggestionService = new SuggestionService(service);
         EventBus eventBus = new EventBus();
         mapper = new ObjectMapper();
 
         dispatcher = MockDispatcherFactory.createDispatcher();
-        dispatcher.getRegistry().addSingletonResource(new TimetableEndpoint(service, settings, suggestionService, eventBus));
+        dispatcher.getRegistry().addSingletonResource(new TimetableEndpoint(service, roService, settings, suggestionService, eventBus));
     }
 
     @Test
@@ -48,7 +51,7 @@ class TimetableEndpointTest extends PersistenceTest {
 
         final String data = response.getContentAsString();
 
-        List<EventDto> result = mapper.readValue(data, new TypeReference<>() {
+        List<EventDtoWithColor> result = mapper.readValue(data, new TypeReference<>() {
         });
         assertEquals(10, result.size());
     }
@@ -62,7 +65,7 @@ class TimetableEndpointTest extends PersistenceTest {
         dispatcher.invoke(MockHttpRequest.get("/timetable"), response);
 
         final String data = response.getContentAsString();
-        List<EventDto> result = mapper.readValue(data, new TypeReference<>() {
+        List<EventDtoWithColor> result = mapper.readValue(data, new TypeReference<>() {
         });
         assertEquals(9, result.size());
     }

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @since 0.1.0
  */
-public final class EventDto extends Entity {
+public class EventDto extends Entity {
 
     private final String eventDate;
     private final long eventTypeId;
