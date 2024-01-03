@@ -22,7 +22,6 @@ public final class TimeEventsEndpoint {
     private final EventTypeCategoryPersistenceService eventTypeCategoryPersistenceService;
     private final EventStatusPersistenceService eventStatusPersistenceService;
     private final EventStatePersistenceService eventStatePersistenceService;
-    private final EventDestinationPersistenceService eventDestinationPersistenceService;
     private final EventBus eventBus;
 
     @Inject
@@ -30,13 +29,11 @@ public final class TimeEventsEndpoint {
                               EventTypeCategoryPersistenceService eventTypeCategoryPersistenceService,
                               EventStatusPersistenceService eventStatusPersistenceService,
                               EventStatePersistenceService eventStatePersistenceService,
-                              EventDestinationPersistenceService eventDestinationPersistenceService,
                               EventBus eventBus) {
         this.eventTypePersistenceService = eventTypePersistenceService;
         this.eventTypeCategoryPersistenceService = eventTypeCategoryPersistenceService;
         this.eventStatusPersistenceService = eventStatusPersistenceService;
         this.eventStatePersistenceService = eventStatePersistenceService;
-        this.eventDestinationPersistenceService = eventDestinationPersistenceService;
         this.eventBus = eventBus;
     }
 
@@ -47,8 +44,7 @@ public final class TimeEventsEndpoint {
                 eventTypePersistenceService.getAll(),
                 eventTypeCategoryPersistenceService.getAll(),
                 eventStatusPersistenceService.getAll(),
-                eventStatePersistenceService.getAll(),
-                eventDestinationPersistenceService.getAll());
+                eventStatePersistenceService.getAll());
     }
 
     @GET
@@ -87,11 +83,5 @@ public final class TimeEventsEndpoint {
     @Path("/states")
     public List<EventStateDto> getEventStates() {
         return eventStatePersistenceService.getAll();
-    }
-
-    @GET
-    @Path("/destinations")
-    public List<EventDestinationDto> getEventDestinations() {
-        return eventDestinationPersistenceService.getAll();
     }
 }

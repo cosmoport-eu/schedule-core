@@ -272,32 +272,31 @@ public class TimetablePersistenceService extends PersistenceService<EventDto> {
             statement = record.getId() > 0 ?
                     conn.prepareStatement(
                             "UPDATE TIMETABLE SET event_date = ?, event_type_id = ?, " +
-                                    "event_state_id = ?, event_status_id = ?, event_destination_id = ?,  " +
+                                    "event_state_id = ?, event_status_id = ?, " +
                                     "gate_id = ?, gate2_id = ?, start_time = ?, duration_time = ?, " +
                                     "repeat_interval = ?, cost = ?, people_limit = ?, contestants = ? " +
                                     "WHERE id = ?"
                     ) : conn.prepareStatement(
                     "INSERT INTO TIMETABLE (event_date, event_type_id, event_state_id, " +
-                            "event_status_id, event_destination_id, gate_id, gate2_id, " +
+                            "event_status_id, gate_id, gate2_id, " +
                             "start_time, duration_time, repeat_interval, cost, people_limit, contestants) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
 
             statement.setString(1, record.getEventDate());
             statement.setLong(2, record.getEventTypeId());
             statement.setLong(3, record.getEventStateId());
             statement.setLong(4, record.getEventStatusId());
-            statement.setLong(5, record.getEventDestinationId());
-            statement.setLong(6, record.getGateId());
-            statement.setLong(7, record.getGate2Id());
-            statement.setLong(8, record.getStartTime());
-            statement.setLong(9, record.getDurationTime());
-            statement.setLong(10, record.getRepeatInterval());
-            statement.setDouble(11, record.getCost());
-            statement.setLong(12, record.getPeopleLimit());
-            statement.setLong(13, record.getContestants());
+            statement.setLong(5, record.getGateId());
+            statement.setLong(6, record.getGate2Id());
+            statement.setLong(7, record.getStartTime());
+            statement.setLong(8, record.getDurationTime());
+            statement.setLong(9, record.getRepeatInterval());
+            statement.setDouble(10, record.getCost());
+            statement.setLong(11, record.getPeopleLimit());
+            statement.setLong(12, record.getContestants());
             if (record.getId() > 0) {
-                statement.setLong(14, record.getId());
+                statement.setLong(13, record.getId());
             }
 
             if (statement.executeUpdate() < 0) {
@@ -394,7 +393,6 @@ public class TimetablePersistenceService extends PersistenceService<EventDto> {
                 rs.getLong("event_type_id"),
                 rs.getLong("event_state_id"),
                 rs.getLong("event_status_id"),
-                rs.getLong("event_destination_id"),
                 rs.getLong("gate_id"),
                 rs.getLong("gate2_id"),
                 rs.getLong("start_time"),
