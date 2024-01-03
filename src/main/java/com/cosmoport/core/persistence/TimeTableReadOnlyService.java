@@ -101,7 +101,6 @@ public class TimeTableReadOnlyService extends PersistenceService<EventDtoWithCol
                 rs.getString("color"),
                 rs.getLong("event_state_id"),
                 rs.getLong("event_status_id"),
-                rs.getLong("event_destination_id"),
                 rs.getLong("gate_id"),
                 rs.getLong("gate2_id"),
                 rs.getLong("start_time"),

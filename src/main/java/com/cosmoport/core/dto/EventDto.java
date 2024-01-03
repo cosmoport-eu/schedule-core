@@ -15,7 +15,6 @@ public class EventDto extends Entity {
     private final long eventTypeId;
     private final long eventStateId;
     private final long eventStatusId;
-    private final long eventDestinationId;
     private final long gateId;
     private final long gate2Id;
     private final long startTime;
@@ -32,7 +31,6 @@ public class EventDto extends Entity {
                     @JsonProperty("event_type_id") long eventTypeId,
                     @JsonProperty("event_state_id") long eventStateId,
                     @JsonProperty("event_status_id") long eventStatusId,
-                    @JsonProperty("event_destination_id") long eventDestinationId,
                     @JsonProperty("gate_id") long gateId,
                     @JsonProperty("gate2_id") long gate2Id,
                     @JsonProperty("start_time") long startTime,
@@ -47,7 +45,6 @@ public class EventDto extends Entity {
         this.eventTypeId = eventTypeId;
         this.eventStatusId = eventStatusId;
         this.eventStateId = eventStateId;
-        this.eventDestinationId = eventDestinationId;
         this.gateId = gateId;
         this.gate2Id = gate2Id;
         this.startTime = startTime;
@@ -65,7 +62,6 @@ public class EventDto extends Entity {
         eventDate = null;
         eventTypeId = 0;
         eventStatusId = 0;
-        eventDestinationId = 0;
         gateId = 0;
         gate2Id = 0;
         startTime = 0;
@@ -91,10 +87,6 @@ public class EventDto extends Entity {
 
     public long getEventStateId() {
         return eventStateId;
-    }
-
-    public long getEventDestinationId() {
-        return eventDestinationId;
     }
 
     public long getGateId() {
@@ -140,7 +132,6 @@ public class EventDto extends Entity {
                 ", eventTypeId=" + eventTypeId +
                 ", eventStatusId=" + eventStatusId +
                 ", eventStateId=" + eventStateId +
-                ", eventDestinationId=" + eventDestinationId +
                 ", gateId=" + gateId +
                 ", gate2Id=" + gate2Id +
                 ", startTime=" + startTime +
