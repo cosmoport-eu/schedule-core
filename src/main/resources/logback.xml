@@ -1,25 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <jmxConfigurator/>
-    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
 
+    <property name="LOGS_DIR" value="./logs"/>
+    <property name="MAX_HISTORY" value="30"/>
+    <property name="TOTAL_SIZE_CAP" value="100MB"/>
+
+    <!-- Appender for console -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %highlight([%-5level]) %logger{1} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <logger name="com.cosmoport.core" level="info"/>
-    <logger name="org.eclipse.jetty" level="info"/>
-    <logger name="com.google.inject" level="info"/>
-    <logger name="com.zaxxer.hikari" level="info"/>
-    <logger name="org.flywaydb.core" level="error"/>
-    <logger name="org.jboss.resteasy" level="info"/>
-    <logger name="org.junit.platform" level="info"/>
-    <logger name="org.springframework.jdbc" level="error" />
-    <logger name="com.cosmoport.core.sync" level="error" />
+    <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_DIR}/application.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
 
-    <root>
-        <level>INFO</level>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOGS_DIR}/archived/application.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+
+            <!-- keep 30 days' worth of history capped at 100MB -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${TOTAL_SIZE_CAP}</totalSizeCap>
+
+            <maxFileSize>10MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+
+
+    <root level="info">
         <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE-ROLLING"/>
     </root>
+
 </configuration>

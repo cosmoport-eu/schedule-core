@@ -1,0 +1,14 @@
+server:
+  port : 8081
+spring:
+  datasource:
+    url: "jdbc:sqlite:core0.db"
+  flyway:
+    url: "jdbc:sqlite:core0.db"
+  jpa:
+    database-platform: "org.hibernate.community.dialect.SQLiteDialect"
+    show-sql: false
+    open-in-view: false
+logging:
+    level:
+      root: INFO
